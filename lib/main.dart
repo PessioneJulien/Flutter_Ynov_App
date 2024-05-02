@@ -102,7 +102,7 @@ class _MarsRoverManifestState extends State<MarsRoverManifest> {
                             rover: currentRover,
                             sol: photo['sol'],
                             totalImage: photo['total_photos'],
-                            apiKey: 'EazAnfX134mZ6E2cgAVQRcXpQU75l4W5eNAJVBJZ',
+                            apiKey: '',
                           )));
                         },
                         child: Padding(
