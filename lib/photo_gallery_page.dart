@@ -81,7 +81,7 @@ class _PhotoGalleryPageState extends State<PhotoGalleryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Photos for Sol ${widget.sol}'),
+        title: Text('Rover ${widget.rover} Photos Sol ${widget.sol}'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -139,11 +139,23 @@ class _PhotoGalleryPageState extends State<PhotoGalleryPage> {
           children: [
             TextButton(
               onPressed: previousPage,
-              child: Text('Précédent'),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.pink[50],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text('Précédent', style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold)),
             ),
             TextButton(
               onPressed: nextPage,
-              child: Text('Suivant'),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.pink[50],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text('Suivant', style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold)),
             ),
           ],
         ),

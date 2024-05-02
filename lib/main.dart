@@ -55,109 +55,90 @@ class _MarsRoverManifestState extends State<MarsRoverManifest> {
         title: Text('Mars Rover Manifest'),
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+        child: Container(
+          color: Colors.pink[50],
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                child: Column(
+                  children: [
+                    Icon(Icons.rocket_launch, size: 48.0, color: Colors.pink),
+                    Text('Mars Rovers', style: TextStyle(fontSize: 24)),
+                  ],
+                ),
               ),
-              child: Column(
-                children: [
-                  Icon(Icons.rocket_launch, size: 72.0, color: Colors.white),
-                  Text('Choose Rover',
-                      style: TextStyle(color: Colors.white, fontSize: 24)),
-                ],
+              ListTile(
+                title: Text('Curiosity'),
+                onTap: () => switchRover('curiosity'),
               ),
-            ),
-            ListTile(
-              title: Text('Curiosity'),
-              onTap: () => switchRover('curiosity'),
-            ),
-            ListTile(
-              title: Text('Spirit'),
-              onTap: () => switchRover('spirit'),
-            ),
-            ListTile(
-              title: Text('Opportunity'),
-              onTap: () => switchRover('opportunity'),
-            ),
-          ],
+              ListTile(
+                title: Text('Spirit'),
+                onTap: () => switchRover('spirit'),
+              ),
+              ListTile(
+                title: Text('Opportunity'),
+                onTap: () => switchRover('opportunity'),
+              ),
+            ],
+          ),
         ),
       ),
-      body: manifestData.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: ManifestDetails(manifestData: manifestData),
-            ),
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  Column(
-                    children: List.generate(manifestData['photos'].length, (index) {
-                      return Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => PhotoGalleryPage(
-                                  rover: currentRover,
-                                  sol: manifestData['photos'][index]['sol'],
-                                  totalImage : manifestData['photos'][index]['total_photos'],
-                                  apiKey: 'EazAnfX134mZ6E2cgAVQRcXpQU75l4W5eNAJVBJZ',  // Use your actual API key here
-                                )),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      style: TextStyle(fontSize: 18, color: Colors.black), // Default text style
-                                      children: [
-                                        TextSpan(
-                                          text: 'Sol ${manifestData['photos'][index]['sol']}',
-                                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue), // Sol and sol number are bold and blue
-                                        ),
-                                        TextSpan(
-                                          text: ' on ${manifestData['photos'][index]['earth_date']}',
-                                          // 'on' and the date are normal weight and black
-                                        ),
-                                      ],
+      body: Column(
+        children: [
+          ManifestDetails(manifestData: manifestData),
+          Expanded(
+            child: manifestData.isEmpty
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var photo in manifestData['photos']) ...[
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PhotoGalleryPage(
+                            rover: currentRover,
+                            sol: photo['sol'],
+                            totalImage: photo['total_photos'],
+                            apiKey: 'EazAnfX134mZ6E2cgAVQRcXpQU75l4W5eNAJVBJZ',
+                          )));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  style: TextStyle(fontSize: 18, color: Colors.black),
+                                  children: [
+                                    TextSpan(
+                                      text: 'Sol ${photo['sol']}',
+                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
                                     ),
-                                  ),
-                                  Text(
-                                    '${manifestData['photos'][index]['total_photos']}',
-                                    style: TextStyle(fontSize: 18, color: Colors.red),
-                                  ),
-                                ],
+                                    TextSpan(
+                                      text: ' on ${photo['earth_date']}',
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                              Text(
+                                '${photo['total_photos']}',
+                                style: TextStyle(fontSize: 18, color: Colors.red),
+                              ),
+                            ],
                           ),
-                          if (index < manifestData['photos'].length - 1) Divider(), // Adds a divider between each row, except after the last one
-                        ],
-                      );
-                    }),
-                  ),
-                ],
+                        ),
+                      ),
+                      Divider(),
+                    ]
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -175,14 +156,13 @@ class ManifestDetails extends StatelessWidget {
         left: 0,
         right: 0,
     child: Container(
-      width: double.infinity,  // Sets the container width to 100% of the screen width
-      color: Colors.pink[50],  // Updated to a light pink background as seen in the screenshot
-      padding: const EdgeInsets.all(16.0),  // Increased padding for more space around the text
+      width: double.infinity, 
+      color: Colors.pink[50],
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text('${manifestData['name']}', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black)),
-          // Each line is now a Row with MainAxisAlignment.spaceBetween
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -225,7 +205,7 @@ class ManifestDetails extends StatelessWidget {
               Text('${manifestData['total_photos']}', style: TextStyle(fontSize: 18, color: Colors.black)),
             ],
           ),
-          SizedBox(height: 20), // Used for spacing between the last text component and any following content
+          SizedBox(height: 20),
         ],
       ),
     )
